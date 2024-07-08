@@ -45,7 +45,22 @@ sheet.columns = [
   },
 ];
 
-const rows = sheet.getRows(2, 4);
+sheet.insertRows(1, [{}, {}, {}]);
+
+const startAt = 5;
+
+sheet.insertRows(startAt, [
+  {
+    registration: "AAA-111",
+    planName: "plan 1",
+  },
+  {
+    registration: "AAA-222",
+    planName: "plan 2",
+  },
+]);
+
+const rows = sheet.getRows(startAt, 4);
 
 for (const row of rows) {
   const cell = row.getCell("registration");
