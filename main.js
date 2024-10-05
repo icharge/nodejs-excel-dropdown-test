@@ -7,55 +7,116 @@ workbook.created = new Date(1985, 8, 30);
 workbook.modified = new Date();
 workbook.lastPrinted = new Date(2016, 9, 27);
 
+const typeListSheet = workbook.addWorksheet("TypeList", {
+  state: "veryHidden",
+});
+typeListSheet.orderNo = 2;
+typeListSheet.columns = [
+  {
+    header: "Type",
+    key: "type",
+  },
+];
+
+typeListSheet.addRows([{ type: "Basic" }, { type: "Advance" }]);
+
 const vehListSheet = workbook.addWorksheet("VehList", { state: "veryHidden" });
-vehListSheet.orderNo = 2;
+vehListSheet.orderNo = 3;
 vehListSheet.columns = [
   {
     header: "Registration",
-    key: "registration",
+    key: "vehReg",
     width: 15,
+  },
+  {
+    header: "Fleet ID",
+    key: "fleetId",
   },
 ];
 
 vehListSheet.addRows([
-  { registration: "AAA-111" },
-  { registration: "AAA-222" },
-  { registration: "AAA-333" },
-  { registration: "AAA-444" },
-  { registration: "AAA-555" },
-  { registration: "AAA-666" },
-  { registration: "AAA-777" },
-  { registration: "AAA-888" },
-  { registration: "AAA-999" },
-  { registration: "AAA-000" },
+  { vehReg: "AAA-111" },
+  { vehReg: "AAA-222" },
+  { vehReg: "AAA-333" },
+  { vehReg: "AAA-444" },
+  { vehReg: "AAA-555" },
+  { vehReg: "AAA-666" },
+  { vehReg: "AAA-777" },
+  { vehReg: "AAA-888" },
+  { vehReg: "AAA-999" },
+  { vehReg: "AAA-000" },
 ]);
 
 const sheet = workbook.addWorksheet("Test");
 sheet.orderNo = 1;
 sheet.columns = [
   {
+    header: "Type",
+    key: "type",
+  },
+  {
     header: "Registration",
-    key: "registration",
+    key: "vehReg",
     width: 15,
   },
   {
-    header: "Plan name",
-    key: "planName",
-    width: 15,
+    header: "TripName",
+    key: "etaPlanDesc",
+    width: 20,
+  },
+  {
+    header: "Sequence",
+    key: "order",
+    width: 10,
+  },
+  {
+    header: "WaypointName",
+    key: "locationName",
+    width: 20,
+  },
+  {
+    header: "PlanArrivalDate",
+    key: "arriveDate",
+  },
+  {
+    header: "PlanArrivalTime",
+    key: "arriveTime",
+  },
+  {
+    header: "PlanDepartureDate",
+    key: "leaveDate",
+  },
+  {
+    header: "PlanDepartureTime",
+    key: "leaveTime",
+  },
+  {
+    header: "TimeInZone",
+    key: "timeInZone",
+  },
+  {
+    header: "Alert1",
+    key: "alert1",
+  },
+  {
+    header: "Alert2",
+    key: "alert2",
+  },
+  {
+    header: "Alert3",
+    key: "alert3",
   },
 ];
 
-sheet.insertRows(1, [{}, {}, {}]);
-
-const startAt = 5;
+const startAt = 2;
 
 sheet.insertRows(startAt, [
   {
-    registration: "AAA-111",
+    vehReg: "AAA-111",
     planName: "plan 1",
   },
   {
-    registration: "AAA-222",
+    vehReg: "AAA-222",
     planName: "plan 2",
   },
 ]);
@@ -63,8 +124,19 @@ sheet.insertRows(startAt, [
 const rows = sheet.getRows(startAt, 4);
 
 for (const row of rows) {
-  const cell = row.getCell("registration");
-  cell.dataValidation = {
+  const typeCell = row.getCell("type");
+  typeCell.dataValidation = {
+    type: "list",
+    allowBlank: false,
+    formulae: [`${typeListSheet.name}!$A$2:$A$${typeListSheet.rowCount}`],
+    error: "Please select type from the list",
+    errorTitle: "Invalid type",
+    errorStyle: "stop",
+    showErrorMessage: true,
+  };
+
+  const vehRegCell = row.getCell("vehReg");
+  vehRegCell.dataValidation = {
     type: "list",
     allowBlank: false,
     formulae: [`${vehListSheet.name}!$A$2:$A$${vehListSheet.rowCount}`],
